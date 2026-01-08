@@ -1,0 +1,37 @@
+# FastAPI Backend
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Streamlit Frontend
+streamlit
+
+# Data Processing
+pandas
+openpyxl
+xlrd
+chardet
+
+# Document Processing (Docling)
+docling
+Pillow
+
+# HTTP Requests
+requests
+
+# MCP Server
+mcp
+
+google-genai 
+pandas
+numpy
+python-dotenv
+httpx
+requests
+langchain-mcp-adapters
+langchain
+langchain-openai
+langchain-experimental
+langgraph
+fastmcp
+mcp
