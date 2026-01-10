@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Ingestion API Configuration
-INGESTION_API_URL = os.getenv("INGESTION_API_URL", "http://localhost:8001")
+INGESTION_API_URL = os.getenv("INGESTION_API_URL", "https://data-assistant-m4kl.onrender.com")
 REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "30"))
 
 # Redis Configuration (for direct access if needed)
