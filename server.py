@@ -41,8 +41,8 @@ app.add_middleware(
 )
 
 # Mount MCP server at /finance endpoint
-app.mount("/finance", mcp.streamable_http_app())
-print("✅ Finance MCP server mounted at /finance")
+app.mount("/data", mcp.streamable_http_app())
+print("✅ Data MCP server mounted at /data")
 
 # Add root endpoint for service information
 @app.get("/")
