@@ -8,7 +8,7 @@ aggregation, feature engineering, and multi-table operations.
 import os
 from typing import Optional, List, Dict, Any
 from mcp.server.fastmcp import FastMCP
-
+from mcp.server.transport_security import TransportSecuritySettings
 # Import data functions
 from data_functions.core import (
     initialize_table,
@@ -38,7 +38,22 @@ from data_functions.transformation import (
 )
 
 # Create FastMCP server
-mcp = FastMCP("Data Assistant MCP Server", stateless_http=True)
+mcp = FastMCP(
+    "Data Assistant MCP Server",
+    stateless_http=True,
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=[
+            "localhost:*",
+            "127.0.0.1:*",
+            "data-analyst-mcp-server.onrender.com:*"  # Your Render domain
+        ],
+        allowed_origins=[
+            "http://localhost:*",
+            "https://data-analyst-mcp-server.onrender.com:*"  # HTTPS for Render
+        ],
+    )
+)
 
 # ============================================================================
 # Core Operations
