@@ -83,16 +83,21 @@ async def health_check():
 # Get port from environment variable (Render sets this automatically)
 PORT = int(os.environ.get("PORT", 8000))
 
+# Determine if running in production (Render) or local development
+IS_PRODUCTION = os.environ.get("RENDER", False) or os.environ.get("ENVIRONMENT") == "production"
+HOST = "0.0.0.0" if IS_PRODUCTION else "localhost"
+
 if __name__ == "__main__":
     import uvicorn
     
     print("=" * 60)
     print("🚀 Starting Data MCP Server")
     print("=" * 60)
-    print(f"📊 Data MCP tools available at: http://0.0.0.0:{PORT}/data")
-    print(f"🏥 Health check at: http://0.0.0.0:{PORT}/health")
-    print(f"📚 API docs at: http://0.0.0.0:{PORT}/docs")
-    print(f"🌐 Service info at: http://0.0.0.0:{PORT}/")
+    print(f"🌍 Environment: {'Production (Render)' if IS_PRODUCTION else 'Local Development'}")
+    print(f"📊 Data MCP tools available at: http://{HOST}:{PORT}/data")
+    print(f"🏥 Health check at: http://{HOST}:{PORT}/health")
+    print(f"📚 API docs at: http://{HOST}:{PORT}/docs")
+    print(f"🌐 Service info at: http://{HOST}:{PORT}/")
     print("=" * 60)
     print("\n🔧 Available MCP Tools:")
     print("  1. initialize_data_table(table_name)")
@@ -118,7 +123,7 @@ if __name__ == "__main__":
     # Run the server
     uvicorn.run(
         app, 
-        host="0.0.0.0", 
+        host=HOST, 
         port=PORT,
         log_level="info"
     )

@@ -9,6 +9,10 @@ import os
 from typing import Optional, List, Dict, Any
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
+
+# Determine environment
+IS_PRODUCTION = os.environ.get("RENDER", False) or os.environ.get("ENVIRONMENT") == "production"
+
 # Import data functions
 from data_functions.core import (
     initialize_table,
@@ -37,10 +41,22 @@ from data_functions.transformation import (
     apply_custom
 )
 
+# Configure transport security based on environment
+if IS_PRODUCTION:
+    # In production (Render), disable transport security to accept any host
+    transport_security = TransportSecuritySettings(enabled=False)
+else:
+    # In local development, restrict to localhost only
+    transport_security = TransportSecuritySettings(
+        enabled=True,
+        allowed_hosts=["localhost", "127.0.0.1", "0.0.0.0", "localhost:8000", "127.0.0.1:8000", "0.0.0.0:8000"]
+    )
+
 # Create FastMCP server
 mcp = FastMCP(
     "Data Assistant MCP Server",
     stateless_http=True,
+    transport_security=transport_security
 )
 
 # ============================================================================
