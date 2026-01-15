@@ -41,18 +41,6 @@ from data_functions.transformation import (
 mcp = FastMCP(
     "Data Assistant MCP Server",
     stateless_http=True,
-    transport_security=TransportSecuritySettings(
-        enable_dns_rebinding_protection=True,
-        allowed_hosts=[
-            "localhost:*",
-            "127.0.0.1:*",
-            "data-analyst-mcp-server.onrender.com:*"  # Your Render domain
-        ],
-        allowed_origins=[
-            "http://localhost:*",
-            "https://data-analyst-mcp-server.onrender.com:*"  # HTTPS for Render
-        ],
-    )
 )
 
 # ============================================================================
@@ -632,3 +620,4 @@ def apply_custom_function(
             "success": False,
             "error": f"Failed to apply custom function: {str(e)}"
         }
+
