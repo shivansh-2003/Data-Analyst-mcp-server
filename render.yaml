@@ -2,17 +2,16 @@ services:
   # Data MCP Server
   - type: web
     name: data-mcp-server
-    env: docker
-    dockerfilePath: ./Dockerfile
+    env: python
     region: oregon
     plan: free
     branch: main
+    buildCommand: "uv sync --frozen && uv cache prune --ci"
+    startCommand: "uv run server.py"
     envVars:
       - key: ENVIRONMENT
         value: production
-      - key: PORT
-        value: 8000
       - key: PYTHONUNBUFFERED
-        value: 1
+        value: "1"
     healthCheckPath: /health
 
