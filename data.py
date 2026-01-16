@@ -10,8 +10,12 @@ from typing import Optional, List, Dict, Any
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
 
-# Determine environment
-IS_PRODUCTION = os.environ.get("RENDER", False) or os.environ.get("ENVIRONMENT") == "production"
+# Determine environment - Render automatically sets RENDER=true
+IS_PRODUCTION = bool(os.environ.get("RENDER")) or os.environ.get("ENVIRONMENT") == "production"
+
+# Get the Render service URL for allowed hosts
+RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL", "")
+RENDER_SERVICE_NAME = os.environ.get("RENDER_SERVICE_NAME", "")
 
 # Import data functions
 from data_functions.core import (
@@ -43,14 +47,32 @@ from data_functions.transformation import (
 
 # Configure transport security based on environment
 if IS_PRODUCTION:
-    # In production (Render), disable transport security to accept any host
-    transport_security = TransportSecuritySettings(enabled=False)
+    # In production (Render), allow the Render domain
+    allowed_hosts = [
+        "data-analyst-mcp-server.onrender.com",
+        "*.onrender.com"  # Allow any Render subdomain
+    ]
+    
+    # Add RENDER_EXTERNAL_URL if available (e.g., https://your-service.onrender.com)
+    if RENDER_EXTERNAL_URL:
+        # Extract hostname from URL
+        from urllib.parse import urlparse
+        parsed = urlparse(RENDER_EXTERNAL_URL)
+        if parsed.hostname:
+            allowed_hosts.append(parsed.hostname)
+    
+    transport_security = TransportSecuritySettings(
+        enabled=True,
+        allowed_hosts=allowed_hosts
+    )
+    print(f"🔒 Production mode: Allowed hosts = {allowed_hosts}")
 else:
     # In local development, restrict to localhost only
     transport_security = TransportSecuritySettings(
         enabled=True,
         allowed_hosts=["localhost", "127.0.0.1", "0.0.0.0", "localhost:8000", "127.0.0.1:8000", "0.0.0.0:8000"]
     )
+    print("🔒 Development mode: Localhost only")
 
 # Create FastMCP server
 mcp = FastMCP(
